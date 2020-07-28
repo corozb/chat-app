@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import { IconButton, MenuItem, Menu } from '@material-ui/core'
 import AccountCircle from '@material-ui/icons/AccountCircle'
+import firebase from 'firebase'
 
-const User = () => {
-	const [anchorEl, setAnchorEl] = React.useState(null)
+const User = ({ user, onLogout, history }) => {
+	const [anchorEl, setAnchorEl] = useState(null)
 	const open = Boolean(anchorEl)
 
 	const handleMenu = (event) => {
@@ -14,7 +16,16 @@ const User = () => {
 		setAnchorEl(null)
 	}
 
-	const handleLogout = () => {}
+	const handleLogout = () => {
+		setAnchorEl(null)
+		firebase
+			.auth()
+			.signOut()
+			.then(() => {
+				if (onLogout) onLogout()
+				history.push('/login')
+			})
+	}
 
 	return (
 		<>
@@ -40,11 +51,11 @@ const User = () => {
 				}}
 				open={open}
 				onClose={handleClose}>
-				<MenuItem>Cristian</MenuItem>
+				<MenuItem>{user.name}</MenuItem>
 				<MenuItem onClick={handleLogout}>Logout</MenuItem>
 			</Menu>
 		</>
 	)
 }
 
-export default User
+export default withRouter(User)

@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 
 import {
 	Avatar,
@@ -12,6 +12,8 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+
+import firebase from 'firebase'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -33,8 +35,33 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Login = () => {
+const Login = ({ history }) => {
 	const classes = useStyles()
+	const [user, setUser] = useState({
+		email: '',
+		password: '',
+	})
+
+	const handleChange = (event) => {
+		setUser({
+			...user,
+			[event.target.name]: event.target.value,
+		})
+	}
+
+	const handleLogin = (event) => {
+		event.preventDefault()
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(user.email, user.password)
+			.then((response) => {
+				history.push('/')
+			})
+			.catch((error) => {
+				console.log(error)
+				alert(error.message)
+			})
+	}
 
 	return (
 		<Container component='main' maxWidth='xs'>
@@ -46,7 +73,7 @@ const Login = () => {
 				<Typography component='h1' variant='h5'>
 					Sign in
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form className={classes.form} onSubmit={handleLogin}>
 					<TextField
 						variant='outlined'
 						margin='normal'
@@ -57,6 +84,8 @@ const Login = () => {
 						name='email'
 						autoComplete='email'
 						autoFocus
+						defaultValue={user.email}
+						onChange={handleChange}
 					/>
 					<TextField
 						variant='outlined'
@@ -68,6 +97,8 @@ const Login = () => {
 						type='password'
 						id='password'
 						autoComplete='current-password'
+						defaultValue={user.password}
+						onChange={handleChange}
 					/>
 					<Button
 						type='submit'
@@ -88,4 +119,4 @@ const Login = () => {
 	)
 }
 
-export default Login
+export default withRouter(Login)

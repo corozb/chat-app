@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const SignUp = (props) => {
+const SignUp = ({ history }) => {
 	const classes = useStyles()
 	const [user, setUser] = useState({
 		name: '',
@@ -60,7 +60,7 @@ const SignUp = (props) => {
 				delete user.password
 				firebase.database().ref(`/users/${response.user.uid}`).set(user)
 				alert('Welcome to ChatApp')
-				props.history.push('/')
+				history.push('/')
 			})
 			.catch((error) => {
 				console.log(error)
