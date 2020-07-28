@@ -30,7 +30,7 @@ const Header = (props) => {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant='h6' className={classes.title}>
-						Chat App
+						ChatApp
 					</Typography>
 					{props.children}
 				</Toolbar>

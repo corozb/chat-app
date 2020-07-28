@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 import {
 	Avatar,
 	Button,
@@ -11,6 +11,8 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+
+import firebase from 'firebase'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -32,8 +34,39 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function SignUp() {
+const SignUp = (props) => {
 	const classes = useStyles()
+	const [user, setUser] = useState({
+		name: '',
+		email: '',
+		password: '',
+		avatar: '',
+	})
+
+	const handleChange = (event) => {
+		setUser({
+			...user,
+			[event.target.name]: event.target.value,
+		})
+	}
+
+	const handleSubmit = (event) => {
+		event.preventDefault()
+
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(user.email, user.password)
+			.then((response) => {
+				delete user.password
+				firebase.database().ref(`/users/${response.user.uid}`).set(user)
+				alert('Welcome to ChatApp')
+				props.history.push('/')
+			})
+			.catch((error) => {
+				console.log(error)
+				alert(error.message)
+			})
+	}
 
 	return (
 		<Container component='main' maxWidth='xs'>
@@ -45,7 +78,7 @@ export default function SignUp() {
 				<Typography component='h1' variant='h5'>
 					Sign up
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form className={classes.form} onSubmit={handleSubmit}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<TextField
@@ -57,6 +90,8 @@ export default function SignUp() {
 								id='name'
 								label='Name'
 								autoFocus
+								value={user.name}
+								onChange={handleChange}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -64,9 +99,11 @@ export default function SignUp() {
 								variant='outlined'
 								required
 								fullWidth
-								id='url'
+								id='avatar'
 								label='Avatar URL'
-								name='url'
+								name='avatar'
+								value={user.avatar}
+								onChange={handleChange}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -77,7 +114,10 @@ export default function SignUp() {
 								id='email'
 								label='Email Address'
 								name='email'
+								type='email'
 								autoComplete='email'
+								value={user.email}
+								onChange={handleChange}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -89,7 +129,8 @@ export default function SignUp() {
 								label='Password'
 								type='password'
 								id='password'
-								autoComplete='current-password'
+								value={user.password}
+								onChange={handleChange}
 							/>
 						</Grid>
 					</Grid>
@@ -111,3 +152,5 @@ export default function SignUp() {
 		</Container>
 	)
 }
+
+export default withRouter(SignUp)
