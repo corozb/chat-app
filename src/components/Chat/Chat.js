@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
 	Container,
@@ -29,14 +30,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const Chat = () => {
+const Chat = ({ history }) => {
 	const classes = useStyles()
 	const [messages, setMessages] = useState([])
 	const scrollRef = useRef()
 
 	const addMessage = (message) => {
 		messages.push(message)
-		setMessages([...messages])
+		setMessages([...messages.sort((a, b) => a.date - b.date)])
 
 		if (scrollRef.current) {
 			scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -62,6 +63,9 @@ const Chat = () => {
 			},
 			(error) => {
 				console.log(error)
+				if (error.message.includes('permission_denied')) {
+					history.push('/login')
+				}
 			}
 		)
 	}, [])
@@ -93,4 +97,4 @@ const Chat = () => {
 	)
 }
 
-export default Chat
+export default withRouter(Chat)
