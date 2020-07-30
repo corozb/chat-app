@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
 	Container,
@@ -12,25 +12,35 @@ import {
 } from '@material-ui/core'
 import firebase from 'firebase'
 
+import NewMessage from './NewMessage'
+
 const useStyles = makeStyles((theme) => ({
 	text: {
 		padding: theme.spacing(2, 2, 0),
 	},
 	paper: {
 		paddingBottom: 50,
+		height: '70vh',
 	},
 	list: {
-		marginBottom: theme.spacing(2),
+		marginBottom: theme.spacing(3),
+		maxHeight: '100%',
+		overflow: 'auto',
 	},
 }))
 
 const Chat = () => {
 	const classes = useStyles()
 	const [messages, setMessages] = useState([])
+	const scrollRef = useRef()
 
 	const addMessage = (message) => {
 		messages.push(message)
 		setMessages([...messages])
+
+		if (scrollRef.current) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+		}
 	}
 
 	useEffect(() => {
@@ -61,9 +71,9 @@ const Chat = () => {
 			<Container>
 				<Paper square className={classes.paper}>
 					<Typography className={classes.text} variant='h5' gutterBottom>
-						Inbox
+						Chating...
 					</Typography>
-					<List className={classes.list}>
+					<List className={classes.list} ref={scrollRef}>
 						{messages.map(({ date, user, message }) => (
 							<ListItem button key={date}>
 								<ListItemAvatar>
@@ -77,7 +87,7 @@ const Chat = () => {
 						))}
 					</List>
 				</Paper>
-				New Message
+				<NewMessage />
 			</Container>
 		</>
 	)
