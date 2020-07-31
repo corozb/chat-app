@@ -14,6 +14,7 @@ import {
 import firebase from 'firebase'
 
 import NewMessage from './NewMessage'
+import LoadUser from '../Utils/LoadUser'
 
 const useStyles = makeStyles((theme) => ({
 	text: {
@@ -52,14 +53,17 @@ const Chat = ({ history }) => {
 			(snapshot) => {
 				const messageItem = snapshot.val() //New message
 				// Read user data:
-				firebase
-					.database()
-					.ref(`/users/${messageItem.user}`)
-					.once('value')
-					.then((userResp) => {
-						messageItem.user = userResp.val()
-						addMessage(messageItem)
-					})
+				LoadUser(messageItem.user).then((data) => {
+					messageItem.user = data
+
+					// firebase
+					// 	.database()
+					// 	.ref(`/users/${messageItem.user}`)
+					// 	.once('value')
+					// 	.then((userResp) => {
+					// 		messageItem.user = userResp.val()
+					addMessage(messageItem)
+				})
 			},
 			(error) => {
 				console.log(error)
