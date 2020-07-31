@@ -55,13 +55,6 @@ const Chat = ({ history }) => {
 				// Read user data:
 				LoadUser(messageItem.user).then((data) => {
 					messageItem.user = data
-
-					// firebase
-					// 	.database()
-					// 	.ref(`/users/${messageItem.user}`)
-					// 	.once('value')
-					// 	.then((userResp) => {
-					// 		messageItem.user = userResp.val()
 					addMessage(messageItem)
 				})
 			},
