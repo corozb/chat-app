@@ -4,7 +4,7 @@ import { CssBaseline } from '@material-ui/core'
 import firebase from 'firebase'
 
 import Header from './components/Layout/Header'
-import User from './components/User'
+import User from './components/User/User'
 import Routes from './Routes'
 import { firebaseConfig } from './config/firebaseConfig'
 
