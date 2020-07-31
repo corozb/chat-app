@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import firebase from 'firebase'
 
 import Notification from '../Utils/Notifcation'
+import LoadUser from '../Utils/LoadUser'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -124,33 +125,17 @@ const Profile = ({ history }) => {
 	useEffect(() => {
 		if (firebase.auth().currentUser) {
 			// Read data
-			firebase
-				.database()
-				.ref(`/users/${firebase.auth().currentUser.uid}`)
-				.once('value')
-				.then((snapshot) => {
-					const userData = snapshot.val()
-
-					if (userData.avatar) {
-						// load avatar url
-						firebase
-							.storage()
-							.ref()
-							.child(`/avatars/${userData.avatar}`)
-							.getDownloadURL()
-							.then(
-								(url) => {
-									userData.avatar = url
-									setUser(userData)
-								},
-								(error) => {
-									setUser(userData)
-								}
-							)
-					} else {
-						setUser(userData)
-					}
-				})
+			LoadUser(firebase.auth().currentUser.uid).then(
+				(data) => {
+					setUser(data)
+				},
+				(error) => {
+					setAlertMessage({
+						message: error.message,
+						severity: 'error',
+					})
+				}
+			)
 		} else {
 			history.push('/login')
 		}

@@ -7,6 +7,7 @@ import Header from './components/Layout/Header'
 import User from './components/User/User'
 import Routes from './Routes'
 import { firebaseConfig } from './config/firebaseConfig'
+import LoadUser from './components/Utils/LoadUser'
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
@@ -21,13 +22,9 @@ const App = () => {
 	useEffect(() => {
 		firebase.auth().onAuthStateChanged((response) => {
 			if (response) {
-				firebase
-					.database()
-					.ref(`/users/${response.uid}`)
-					.once('value')
-					.then((snapshot) => {
-						setUser(snapshot.val())
-					})
+				LoadUser(response.uid).then((data) => {
+					setUser(data)
+				})
 			}
 		})
 	}, [])
