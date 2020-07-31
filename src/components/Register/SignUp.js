@@ -11,8 +11,9 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-
 import firebase from 'firebase'
+
+import Notification from '../Utils/Notifcation'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -43,6 +44,11 @@ const SignUp = ({ history }) => {
 		avatar: '',
 	})
 
+	const [alertMessage, setAlertMessage] = useState({
+		message: 'Welcome to ChatApp',
+		severity: 'success',
+	})
+
 	const handleChange = (event) => {
 		setUser({
 			...user,
@@ -52,6 +58,7 @@ const SignUp = ({ history }) => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
+		setAlertMessage(null)
 
 		firebase
 			.auth()
@@ -59,12 +66,18 @@ const SignUp = ({ history }) => {
 			.then((response) => {
 				delete user.password
 				firebase.database().ref(`/users/${response.user.uid}`).set(user)
-				alert('Welcome to ChatApp')
+				setAlertMessage({
+					message: 'Welcome to ChatApp',
+					severity: 'success',
+				})
 				history.push('/')
 			})
 			.catch((error) => {
 				console.log(error)
-				alert(error.message)
+				setAlertMessage({
+					message: error.message,
+					severity: 'error',
+				})
 			})
 	}
 
@@ -149,6 +162,12 @@ const SignUp = ({ history }) => {
 					</Grid>
 				</form>
 			</div>
+			{alertMessage && (
+				<Notification
+					message={alertMessage.message}
+					severity={alertMessage.severity}
+				/>
+			)}
 		</Container>
 	)
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, withRouter } from 'react-router-dom'
-
 import {
 	Avatar,
 	CssBaseline,
@@ -12,8 +11,9 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-
 import firebase from 'firebase'
+
+import Notification from '../Utils/Notifcation'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -42,6 +42,8 @@ const Login = ({ history }) => {
 		password: '',
 	})
 
+	const [errorMessage, setErrorMessage] = useState('')
+
 	const handleChange = (event) => {
 		setUser({
 			...user,
@@ -51,6 +53,7 @@ const Login = ({ history }) => {
 
 	const handleLogin = (event) => {
 		event.preventDefault()
+		setErrorMessage('')
 		firebase
 			.auth()
 			.signInWithEmailAndPassword(user.email, user.password)
@@ -59,7 +62,7 @@ const Login = ({ history }) => {
 			})
 			.catch((error) => {
 				console.log(error)
-				alert(error.message)
+				setErrorMessage(error.message)
 			})
 	}
 
@@ -115,6 +118,7 @@ const Login = ({ history }) => {
 					</Grid>
 				</form>
 			</div>
+			{errorMessage && <Notification message={errorMessage} severity='error' />}
 		</Container>
 	)
 }
