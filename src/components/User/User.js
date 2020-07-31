@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { IconButton, MenuItem, Menu, Avatar } from '@material-ui/core'
 import { lightBlue } from '@material-ui/core/colors'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
 	blue: {
 		color: theme.palette.getContrastText(lightBlue[600]),
 		backgroundColor: lightBlue[400],
+	},
+	anchor: {
+		textDecoration: 'none',
 	},
 }))
 
@@ -70,6 +73,11 @@ const User = ({ user, onLogout, history }) => {
 				open={open}
 				onClose={handleClose}>
 				<MenuItem>{user.name}</MenuItem>
+				<MenuItem>
+					<Link to='/profile' className={classes.anchor}>
+						Profile
+					</Link>
+				</MenuItem>
 				<MenuItem onClick={handleLogout}>Logout</MenuItem>
 			</Menu>
 		</>

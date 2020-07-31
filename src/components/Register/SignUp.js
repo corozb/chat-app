@@ -44,10 +44,7 @@ const SignUp = ({ history }) => {
 		avatar: '',
 	})
 
-	const [alertMessage, setAlertMessage] = useState({
-		message: 'Welcome to ChatApp',
-		severity: 'success',
-	})
+	const [alertMessage, setAlertMessage] = useState(null)
 
 	const handleChange = (event) => {
 		setUser({
