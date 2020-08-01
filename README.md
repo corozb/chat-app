@@ -5,7 +5,9 @@ This is a **Chat Application** where you can:
 - Create a user for the app (sign up)
 - Login after your register
 - Administrate profile to update information and upload your own avatar
-- Preverse the chat history
+- Chat in real time with other user (open other browser or incognito mode)
+- Preserve the chat history
+
   [DEMO](https://chat-app-c457f.web.app/)
   <br>
   ![](https://i.ibb.co/VpSJTT3/chat-app-c457f-web-app-login-1.png)
