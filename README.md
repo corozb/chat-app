@@ -2,7 +2,7 @@
 
 This is a **Chat Application** where you can:
 
-- Create a user for the app (sign up)
+- Create a user for the app (sign up), you can use a fake email.
 - Login after your register
 - Administrate profile to update information and upload your own avatar
 - Chat in real time with other user (open other browser or incognito mode)
